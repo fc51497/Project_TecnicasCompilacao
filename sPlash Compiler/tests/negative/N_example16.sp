@@ -1,0 +1,7 @@
+max(a: Int, b:Int){
+    if a > b {
+        return a;
+    }
+    return b;
+}
+pi:Int = 3;

@@ -1,0 +1,91 @@
+start: programa
+
+programa: argumentos*
+
+argumentos: declaracao
+         | definicao
+         | if
+         | while
+         | for
+         | return
+
+atom: INT
+     | FLOAT
+     | variavel
+     | STRING
+     | "true" -> true
+     | "false" -> false
+
+expressao: a 
+          
+a: b  
+   | "-" b -> neg  //Numero negativo
+          
+b: c
+   | b "+" c -> add //Soma*
+   | b "-" c -> sub //Subtração*
+
+c: atom
+    | c "*" atom -> mul //Multiplicação*
+    | c "/" atom -> div //Divisão*
+    | c "%" atom -> mod //Modulo*
+
+
+
+declaracao: ligacao"(" (ligacao ["," ligacao]* )? ");" -> funcdec
+           | ligacao";" -> vardec
+
+definicao:  ligacao"(" (ligacao ["," ligacao]* )? ")" block -> funcdef
+          |  ligacao "=" expressão ";" -> vardef
+
+
+condicao: comparacao
+         | variavel
+         | comparacao LOGOP condicao
+         
+
+comparacao: expressao COMPOP expressao
+
+variavel: NAME
+ligacao: NAME":"TYPE [retoque]
+
+if: "if" condicao block ["else" block]
+while: "while" condicao block 
+for: "for" condicao block
+
+//for_stmt: "for" exprlist "in" testlist ":" suite ["else" ":" suite]
+
+return: "return" [expressao] ";"
+
+retoque: "where" condicao
+
+block: "{" argumentos* "}"
+
+COMMENT: "(*" /(.|\n)*?/ "*)"
+STRING: /([ubf]?r?|r[ubf])("(?!"").*?(?<!\\)(\\\\)*?"|'(?!'').*?(?<!\\)(\\\\)*?')/i
+INT: /((_*)?\d+)+/
+FLOAT: DIGIT+ | DIGIT*"."DIGIT+ | "0".."9"("_"?"0".."9")*
+TYPE: "Int" | "Float" | "Double" | "Bool" | "String" | "Void"
+BOOL: "true" 
+    | "false"
+ARRAYS: "[" atom?, atom*"]"
+      | "[" ARRAYS* "]"
+
+COMPOP: "==" | "!=" | ">=" | ">" | "<" | "<="
+LOGOP:  "&&" | "||"  
+AROP:   "+" | "-" | "*" | "/" | "%"
+
+UNOP: "!"
+
+INDEX_ACESSO: NAME"["INT"]" 
+
+%import common.WS
+%ignore WS
+%import common.WS_INLINE
+%ignore WS_INLINE
+
+%ignore COMMENT
+
+%import common.CNAME -> NAME
+%import common.ESCAPED_STRING -> STRING
+%import common.DIGIT
