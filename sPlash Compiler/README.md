@@ -83,4 +83,4 @@ T <: T, for all T
 {x:T | p} <: T, for all T.
 ```
 
-- So, {x:Int | x > 0} is a subtype of {x:Int | x > 10} for the purposes of this assignment, as we are ignoring the predicates. See the Extra Section below for more details on this.
+- So, `{x:Int | x > 0} is a subtype of {x:Int | x > 10}` for the purposes of this assignment, as we are ignoring the predicates. See the Extra Section below for more details on this.
