@@ -58,3 +58,26 @@ piInt = 3; ( Engineers, am i right )
     - String literals (``, `a`, `aa`, `qwertyuiop`, `qwertytuiop`)
     - Variables, which start with a letter or understore and are followed by any number of letters, underscores or numbers.
     - index access, (`a[0]` or `get_array()[i+1]`)
+
+## Phase 2 - Parser
+
+- In this second assignment, the goal is to detect semantically invalid programs.
+
+- In particular, we are looking to identify the following problems:
+
+    - Functions that are called with parameters of the wrong type.
+    - Functions returning values of the wrong type.
+    - Use of operators with the wrong type.
+    - Definition of variables with the wrong type.
+    - Note that we have the following sub typing relationships:
+
+```T <: T, for all T
+```
+
+```{x:T | p} <: {y:U | q} for any T <: U.
+```
+
+```{x:T | p} <: T, for all T.
+```
+
+- So, {x:Int | x > 0} is a subtype of {x:Int | x > 10} for the purposes of this assignment, as we are ignoring the predicates. See the Extra Section below for more details on this.

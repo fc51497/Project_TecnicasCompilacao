@@ -2,49 +2,45 @@ start: programa
 
 programa: argumentos*
 
-argumentos: declaracao
+?argumentos: declaracao
          | definicao
          | if
          | while
          | for
          | return
 
-atom: INT
+?atom: INT
      | FLOAT
+     | TRUE
+     | FALSE
      | variavel
      | STRING
-     | "true" -> true
-     | "false" -> false
 
-expressao: a 
-          
-a: b  
+?expressao: a 
+
+?a: b  
    | "-" b -> neg  //Numero negativo
           
-b: c
+?b: c
    | b "+" c -> add //Soma*
    | b "-" c -> sub //Subtração*
 
-c: atom
+?c: atom
     | c "*" atom -> mul //Multiplicação*
     | c "/" atom -> div //Divisão*
     | c "%" atom -> mod //Modulo*
 
-
-
-declaracao: ligacao"(" (ligacao ["," ligacao]* )? ");" -> funcdec
+?declaracao: ligacao"(" (ligacao ["," ligacao]* )? ");" -> funcdec
            | ligacao";" -> vardec
 
-definicao:  ligacao"(" (ligacao ["," ligacao]* )? ")" block -> funcdef
+?definicao:  ligacao"(" (ligacao ["," ligacao]* )? ")" block -> funcdef
           |  ligacao "=" expressão ";" -> vardef
 
-
-condicao: comparacao
+?condicao: comparacao
          | variavel
          | comparacao LOGOP condicao
          
-
-comparacao: expressao COMPOP expressao
+?comparacao: expressao COMPOP expressao
 
 variavel: NAME
 ligacao: NAME":"TYPE [retoque]
@@ -53,7 +49,7 @@ if: "if" condicao block ["else" block]
 while: "while" condicao block 
 for: "for" condicao block
 
-//for_stmt: "for" exprlist "in" testlist ":" suite ["else" ":" suite]
+func_call: NAME"("(expressao (("," expressao )*)?)?")"
 
 return: "return" [expressao] ";"
 
@@ -62,12 +58,22 @@ retoque: "where" condicao
 block: "{" argumentos* "}"
 
 COMMENT: "(*" /(.|\n)*?/ "*)"
+
 STRING: /([ubf]?r?|r[ubf])("(?!"").*?(?<!\\)(\\\\)*?"|'(?!'').*?(?<!\\)(\\\\)*?')/i
+
 INT: /((_*)?\d+)+/
+
 FLOAT: DIGIT+ | DIGIT*"."DIGIT+ | "0".."9"("_"?"0".."9")*
+
 TYPE: "Int" | "Float" | "Double" | "Bool" | "String" | "Void"
+
 BOOL: "true" 
     | "false"
+
+TRUE: "true" 
+
+FALSE: "false"
+
 ARRAYS: "[" atom?, atom*"]"
       | "[" ARRAYS* "]"
 
